@@ -26,6 +26,8 @@ jobs:
       - name: Verify toolchain
         run: make check-tools
 
+      - name: Install Buf
+        run: go install github.com/bufbuild/buf/cmd/buf@v1.71.0
+
       - name: Run quality gate
         run: make check
-

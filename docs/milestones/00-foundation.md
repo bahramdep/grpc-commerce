@@ -7,8 +7,7 @@ checked consistently. This milestone creates the feedback loop before gRPC,
 Protobuf, databases, or containers add more failure modes.
 
 This corresponds to the toolchain and project-setup concerns in Babal chapter 3
-and Jean chapter 4. We deliberately stop before contract generation; that is
-Milestone 1.
+and Jean chapter 4. Contract generation begins in Milestone 1.
 
 ## Current decisions
 
@@ -29,51 +28,18 @@ Milestone 1.
 
 ## Learner contribution
 
-1. Install Go 1.26.5 and run `make check-tools`.
-2. Create `internal/platform/buildinfo/buildinfo.go` with:
-   - a `Version` value type containing `Commit`, `BuildTime`, and `Dirty`;
-   - a constructor that rejects an empty commit and malformed RFC3339 build
-     time;
-   - no logging, environment reads, global mutation, or panic.
-3. Create table-driven tests covering valid input, empty commit, invalid time,
-   and the zero value.
-4. Add a fuzz test for the constructor. Its invariant: arbitrary input must
-   never panic; success must always contain a non-empty commit and valid RFC3339
-   timestamp.
-5. Run `make fmt` and `make check`.
-6. Add the first entry to `docs/learning-log.md` explaining:
-   - why `Version` is a value rather than a global variable;
-   - why parsing belongs in the constructor;
-   - what the race detector can and cannot prove here.
-
-## Constraints for the exercise
-
-- Use only the Go standard library.
-- Prefer a concrete type; do not introduce an interface.
-- Return errors; do not panic.
-- Tests must not depend on wall-clock time or environment variables.
-- Do not add a CLI, HTTP server, gRPC server, dependency-injection framework,
-  or configuration library.
+1. Install Go 1.26.5.
+2. Run `make check-tools` and confirm the pinned compiler is active.
+3. Review the repository commands and engineering rules.
 
 ## Acceptance gate
 
 - `make check-tools` passes with Go 1.26.5.
-- `make fmt-check`, `make vet`, `make test`, and `make test-race` pass.
-- `go test -fuzz=Fuzz -fuzztime=10s ./internal/platform/buildinfo` finds no
-  panic or invariant violation.
-- The package API is small and documented.
-- The learning-log entry explains decisions rather than restating code.
-- A clean checkout can reproduce the same results using only documented
-  commands.
+- The learner can explain what `fmt`, `vet`, `test`, and `test-race` contribute.
+- A clean checkout documents the same pinned toolchain and commands.
 
-## Review questions
+## Result
 
-Be prepared to answer these in the code review:
-
-1. Should `BuildTime` be stored as `string` or `time.Time`? What boundary does
-   each choice create?
-2. Should a dirty working tree be an error? Why or why not?
-3. Why is an interface unnecessary for this package today?
-4. What bug classes can `go test -race` detect, and what does a passing run not
-   prove?
-5. Which constructor guarantees should callers be able to rely on forever?
+Completed on 2026-07-13. The learner verified Go 1.26.5 with
+`make check-tools`. Production build metadata is deferred until the deployment
+and observability milestone, where a running service will consume it.

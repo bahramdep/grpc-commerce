@@ -1,8 +1,9 @@
 SHELL := /bin/sh
 
 GO ?= go
+BUF ?= buf
 
-.PHONY: help check-tools fmt fmt-check vet test test-race check
+.PHONY: help check-tools fmt fmt-check vet test test-race proto-format proto-format-check proto-lint proto-generate proto-check check
 
 help: ## Show available commands.
 	@awk 'BEGIN {FS = ":.*## "}; /^[a-zA-Z_-]+:.*## / {printf "%-18s %s\n", $$1, $$2}' $(MAKEFILE_LIST)
@@ -34,5 +35,18 @@ test: ## Run the fast test suite.
 test-race: ## Run tests with the race detector.
 	@$(GO) test -race ./...
 
-check: fmt-check vet test test-race ## Run the Milestone 0 quality gate.
+proto-format: ## Format Protobuf contracts in place.
+	@$(BUF) format -w
 
+proto-format-check: ## Fail if Protobuf contracts are not formatted.
+	@$(BUF) format --diff --exit-code
+
+proto-lint: ## Lint Protobuf contracts.
+	@$(BUF) lint
+
+proto-generate: ## Generate Go and gRPC code from Protobuf contracts.
+	@$(BUF) generate
+
+proto-check: proto-format-check proto-lint ## Run contract formatting and lint gates.
+
+check: fmt-check vet test test-race proto-check ## Run the repository quality gate.

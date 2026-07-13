@@ -9,18 +9,20 @@ introduced only when a use case and an acceptance test justify it.
 
 ## Current milestone
 
-Milestone 0 establishes a trustworthy development loop. Read
-[`docs/milestones/00-foundation.md`](docs/milestones/00-foundation.md) before
-adding application code.
+Milestone 0 established a trustworthy development loop. Milestone 1 designs the
+first production-facing contract: `OrderService.CreateOrder`. Read
+[`docs/milestones/01-order-contract.md`](docs/milestones/01-order-contract.md).
 
 ## Prerequisites
 
 - Go 1.26.5
+- Buf 1.71.0
 - GNU Make or a compatible `make`
 - A POSIX shell for the toolchain check
 
-The Protobuf, Buf, Docker, and Kubernetes toolchains will be introduced and
-pinned in the milestones that first use them.
+Code generation uses pinned remote plugins, so a separate local `protoc` or
+`protoc-gen-go` installation is not required. Docker and Kubernetes are
+introduced in later milestones.
 
 ## Commands
 
@@ -28,6 +30,8 @@ pinned in the milestones that first use them.
 make help
 make check-tools
 make fmt
+make proto-check
+make proto-generate
 make check
 ```
 
