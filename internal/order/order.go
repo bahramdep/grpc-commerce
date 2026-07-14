@@ -2,7 +2,6 @@ package order
 
 import "time"
 
-
 type Status int
 
 const (
@@ -10,16 +9,15 @@ const (
 	StatusPending
 )
 
-type Item struct{
+type Item struct {
 	ProductID string
-	Quantity int32
+	Quantity  int32
 }
 
-
 type Order struct {
-	ID string
+	ID         string
 	CustomerID string
-	Items []Item
-	Status Status
-	CreatedAt time.Time
+	Items      []Item
+	Status     Status
+	CreatedAt  time.Time
 }
