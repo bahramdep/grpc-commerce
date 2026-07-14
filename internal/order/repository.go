@@ -1,7 +1,12 @@
 package order
 
-import "context"
+import (
+	"context"
+	"errors"
+)
+
+var ErrIdempotencyKeyConflict = errors.New("idempotency key conflict")
 
 type Repository interface {
-	Create(ctx context.Context, candidate Order) (Order, error)
+	Create(ctx context.Context, candidate Order, idempotencyKey string) (Order, error)
 }
