@@ -1,0 +1,39 @@
+syntax = "proto3";
+
+package commerce.order.v1;
+
+import "google/protobuf/timestamp.proto";
+
+option go_package = "github.com/bahramdep/grpc-commerce/gen/go/commerce/order/v1;orderv1";
+
+service OrderService {
+  rpc CreateOrder(CreateOrderRequest) returns (CreateOrderResponse);
+}
+
+message CreateOrderRequest {
+  string idempotency_key = 1;
+  string customer_id = 2;
+  repeated OrderItem items = 3;
+}
+
+message CreateOrderResponse {
+  Order order = 1;
+}
+
+message OrderItem {
+  string product_id = 1;
+  int32 quantity = 2;
+}
+
+message Order {
+  string id = 1;
+  string customer_id = 2;
+  repeated OrderItem items = 3;
+  OrderStatus status = 4;
+  google.protobuf.Timestamp created_at = 5;
+}
+
+enum OrderStatus {
+  ORDER_STATUS_UNSPECIFIED = 0;
+  ORDER_STATUS_PENDING = 1;
+}
