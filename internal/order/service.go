@@ -81,5 +81,5 @@ func (s *Service) Create(ctx context.Context, command CreateCommand) (Order, err
 		CreatedAt:  s.now().UTC(),
 	}
 
-	return s.repository.Create(ctx, candidate, command.IdempotencyKey)
+	return s.repository.Create(ctx, command.IdempotencyKey, candidate)
 }

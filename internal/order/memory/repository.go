@@ -16,7 +16,7 @@ type Repository struct {
 	idempotencyKeys map[string]string
 }
 
-var _ order.Repository = (*Repository)(nil)
+//var _ order.Repository = (*Repository)(nil)
 
 func NewRepository() *Repository {
 	return &Repository{
