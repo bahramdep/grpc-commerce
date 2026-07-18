@@ -36,10 +36,12 @@ func (r *Repository) Create(ctx context.Context, idempotencyKey string, candidat
 	if existingID, found := r.idempotencyKeys[idempotencyKey]; found {
 		existing := r.orders[existingID]
 
-		sameRequest := existing.CustomerID == candidate.CustomerID && slices.Equal(existing.Items, candidate.Items)
+		sameRequest := existing.CustomerID == candidate.CustomerID &&
+			slices.Equal(existing.Items, candidate.Items)
 		if !sameRequest {
 			return order.Order{}, order.ErrIdempotencyKeyConflict
 		}
+		return cloneOrder(existing), nil
 	}
 
 	r.nextID++
