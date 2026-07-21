@@ -304,9 +304,11 @@ func (x *ReserveInventoryResponse) GetReservation() *Reservation {
 }
 
 type ReleaseInventoryRequest struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
+	state          protoimpl.MessageState `protogen:"open.v1"`
+	IdempotencyKey string                 `protobuf:"bytes,1,opt,name=idempotency_key,json=idempotencyKey,proto3" json:"idempotency_key,omitempty"`
+	ReservationId  string                 `protobuf:"bytes,2,opt,name=reservation_id,json=reservationId,proto3" json:"reservation_id,omitempty"`
+	unknownFields  protoimpl.UnknownFields
+	sizeCache      protoimpl.SizeCache
 }
 
 func (x *ReleaseInventoryRequest) Reset() {
@@ -339,8 +341,23 @@ func (*ReleaseInventoryRequest) Descriptor() ([]byte, []int) {
 	return file_commerce_inventory_v1_inventory_service_proto_rawDescGZIP(), []int{4}
 }
 
+func (x *ReleaseInventoryRequest) GetIdempotencyKey() string {
+	if x != nil {
+		return x.IdempotencyKey
+	}
+	return ""
+}
+
+func (x *ReleaseInventoryRequest) GetReservationId() string {
+	if x != nil {
+		return x.ReservationId
+	}
+	return ""
+}
+
 type ReleaseInventoryResponse struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
+	Reservation   *Reservation           `protobuf:"bytes,1,opt,name=reservation,proto3" json:"reservation,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -375,6 +392,13 @@ func (*ReleaseInventoryResponse) Descriptor() ([]byte, []int) {
 	return file_commerce_inventory_v1_inventory_service_proto_rawDescGZIP(), []int{5}
 }
 
+func (x *ReleaseInventoryResponse) GetReservation() *Reservation {
+	if x != nil {
+		return x.Reservation
+	}
+	return nil
+}
+
 var File_commerce_inventory_v1_inventory_service_proto protoreflect.FileDescriptor
 
 const file_commerce_inventory_v1_inventory_service_proto_rawDesc = "" +
@@ -396,9 +420,12 @@ const file_commerce_inventory_v1_inventory_service_proto_rawDesc = "" +
 	"\n" +
 	"created_at\x18\x05 \x01(\v2\x1a.google.protobuf.TimestampR\tcreatedAt\"`\n" +
 	"\x18ReserveInventoryResponse\x12D\n" +
-	"\vreservation\x18\x01 \x01(\v2\".commerce.inventory.v1.ReservationR\vreservation\"\x19\n" +
-	"\x17ReleaseInventoryRequest\"\x1a\n" +
-	"\x18ReleaseInventoryResponse*y\n" +
+	"\vreservation\x18\x01 \x01(\v2\".commerce.inventory.v1.ReservationR\vreservation\"i\n" +
+	"\x17ReleaseInventoryRequest\x12'\n" +
+	"\x0fidempotency_key\x18\x01 \x01(\tR\x0eidempotencyKey\x12%\n" +
+	"\x0ereservation_id\x18\x02 \x01(\tR\rreservationId\"`\n" +
+	"\x18ReleaseInventoryResponse\x12D\n" +
+	"\vreservation\x18\x01 \x01(\v2\".commerce.inventory.v1.ReservationR\vreservation*y\n" +
 	"\x11ReservationStatus\x12\"\n" +
 	"\x1eRESERVATION_STATUS_UNSPECIFIED\x10\x00\x12\x1f\n" +
 	"\x1bRESERVATION_STATUS_RESERVED\x10\x01\x12\x1f\n" +
@@ -437,15 +464,16 @@ var file_commerce_inventory_v1_inventory_service_proto_depIdxs = []int32{
 	0, // 2: commerce.inventory.v1.Reservation.status:type_name -> commerce.inventory.v1.ReservationStatus
 	7, // 3: commerce.inventory.v1.Reservation.created_at:type_name -> google.protobuf.Timestamp
 	3, // 4: commerce.inventory.v1.ReserveInventoryResponse.reservation:type_name -> commerce.inventory.v1.Reservation
-	2, // 5: commerce.inventory.v1.InventoryService.ReserveInventory:input_type -> commerce.inventory.v1.ReserveInventoryRequest
-	5, // 6: commerce.inventory.v1.InventoryService.ReleaseInventory:input_type -> commerce.inventory.v1.ReleaseInventoryRequest
-	4, // 7: commerce.inventory.v1.InventoryService.ReserveInventory:output_type -> commerce.inventory.v1.ReserveInventoryResponse
-	6, // 8: commerce.inventory.v1.InventoryService.ReleaseInventory:output_type -> commerce.inventory.v1.ReleaseInventoryResponse
-	7, // [7:9] is the sub-list for method output_type
-	5, // [5:7] is the sub-list for method input_type
-	5, // [5:5] is the sub-list for extension type_name
-	5, // [5:5] is the sub-list for extension extendee
-	0, // [0:5] is the sub-list for field type_name
+	3, // 5: commerce.inventory.v1.ReleaseInventoryResponse.reservation:type_name -> commerce.inventory.v1.Reservation
+	2, // 6: commerce.inventory.v1.InventoryService.ReserveInventory:input_type -> commerce.inventory.v1.ReserveInventoryRequest
+	5, // 7: commerce.inventory.v1.InventoryService.ReleaseInventory:input_type -> commerce.inventory.v1.ReleaseInventoryRequest
+	4, // 8: commerce.inventory.v1.InventoryService.ReserveInventory:output_type -> commerce.inventory.v1.ReserveInventoryResponse
+	6, // 9: commerce.inventory.v1.InventoryService.ReleaseInventory:output_type -> commerce.inventory.v1.ReleaseInventoryResponse
+	8, // [8:10] is the sub-list for method output_type
+	6, // [6:8] is the sub-list for method input_type
+	6, // [6:6] is the sub-list for extension type_name
+	6, // [6:6] is the sub-list for extension extendee
+	0, // [0:6] is the sub-list for field type_name
 }
 
 func init() { file_commerce_inventory_v1_inventory_service_proto_init() }

@@ -40,6 +40,11 @@ message ReserveInventoryResponse {
   Reservation reservation = 1;
 }
 
-message ReleaseInventoryRequest {}
+message ReleaseInventoryRequest {
+  string idempotency_key = 1;
+  string reservation_id = 2;
+}
 
-message ReleaseInventoryResponse {}
+message ReleaseInventoryResponse {
+  Reservation reservation = 1;
+}
