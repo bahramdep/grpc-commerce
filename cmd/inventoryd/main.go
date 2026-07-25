@@ -15,6 +15,7 @@ import (
 	"github.com/bahramdep/grpc-commerce/internal/inventory/grpcserver"
 	"github.com/bahramdep/grpc-commerce/internal/inventory/memory"
 	"google.golang.org/grpc"
+	"google.golang.org/grpc/reflection"
 )
 
 const (
@@ -70,7 +71,7 @@ func run() error {
 		grpcServer,
 		inventoryServer,
 	)
-
+	reflection.Register(grpcServer)
 	serveErrors := make(chan error, 1)
 
 	go func() {
