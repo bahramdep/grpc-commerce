@@ -44,10 +44,18 @@ func (s *Service) Reserve(ctx context.Context, command ReserveCommand) (Reservat
 	if err := validateReserve(command); err != nil {
 		return Reservation{}, err
 	}
+	items := make([]Item, len(command.Items))
+
+	for index, item := range command.Items {
+		items[index] = Item{
+			ProductID: strings.TrimSpace(item.ProductID),
+			Quantity:  item.Quantity,
+		}
+	}
 
 	candidate := Reservation{
-		OrderID:   command.OrderID,
-		Items:     command.Items,
+		OrderID:   strings.TrimSpace(command.OrderID),
+		Items:     items,
 		Status:    StatusReserved,
 		CreatedAt: s.now().UTC(),
 	}
