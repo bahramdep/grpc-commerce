@@ -13,13 +13,16 @@ import (
 	orderv1 "github.com/bahramdep/grpc-commerce/gen/go/commerce/order/v1"
 	"github.com/bahramdep/grpc-commerce/internal/order"
 	"github.com/bahramdep/grpc-commerce/internal/order/grpcserver"
+	"github.com/bahramdep/grpc-commerce/internal/order/inventorygrpc"
 	"github.com/bahramdep/grpc-commerce/internal/order/memory"
 	"google.golang.org/grpc"
+	"google.golang.org/grpc/credentials/insecure"
 )
 
 const (
-	defaultAddress  = ":50051"
-	shutdownTimeout = 10 * time.Second
+	defaultAddress         = ":50051"
+	defaultInventoryTarget = "localhost:50052"
+	shutdownTimeout        = 10 * time.Second
 )
 
 func main() {
@@ -51,8 +54,30 @@ func run() error {
 	}
 	defer lis.Close()
 
+	inventoryTarget := os.Getenv("INVENTORY_GRPC_TARGET")
+	if inventoryTarget == "" {
+		inventoryTarget = defaultInventoryTarget
+	}
+
+	inventoryConnection, err := grpc.NewClient(
+		inventoryTarget,
+		grpc.WithTransportCredentials(
+			insecure.NewCredentials(),
+		),
+	)
+	if err != nil {
+		return fmt.Errorf(
+			"create Inventory gRPC client for %s: %w",
+			inventoryTarget,
+			err,
+		)
+	}
+	defer inventoryConnection.Close()
+
+	inventoryClient := inventorygrpc.New(inventoryConnection)
+
 	repository := memory.NewRepository()
-	orderService := order.NewService(repository)
+	orderService := order.NewService(repository, inventoryClient)
 	orderServer := grpcserver.New(orderService)
 
 	grpcServer := grpc.NewServer()

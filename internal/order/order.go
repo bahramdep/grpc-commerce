@@ -7,6 +7,7 @@ type Status int
 const (
 	StatusUnspecified Status = iota
 	StatusPending
+	StatusConfirmed
 )
 
 type Item struct {
@@ -15,9 +16,10 @@ type Item struct {
 }
 
 type Order struct {
-	ID         string
-	CustomerID string
-	Items      []Item
-	Status     Status
-	CreatedAt  time.Time
+	ID                     string
+	CustomerID             string
+	Items                  []Item
+	Status                 Status
+	CreatedAt              time.Time
+	InventoryReservationID string
 }

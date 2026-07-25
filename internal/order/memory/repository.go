@@ -54,6 +54,33 @@ func (r *Repository) Create(ctx context.Context, idempotencyKey string, candidat
 	return cloneOrder(stored), nil
 }
 
+func (r *Repository) ConfirmInventory(ctx context.Context, orderID string, reservationID string) (order.Order, error) {
+	if err := ctx.Err(); err != nil {
+		return order.Order{}, err
+	}
+	r.mu.Lock()
+	defer r.mu.Unlock()
+
+	existing, found := r.orders[orderID]
+	if !found {
+		return order.Order{}, order.ErrOrderNotFound
+	}
+
+	if existing.Status == order.StatusConfirmed {
+		if existing.InventoryReservationID != reservationID {
+			return order.Order{}, order.ErrInventoryReservationConflict
+		}
+		return cloneOrder(existing), nil
+	}
+
+	existing.Status = order.StatusConfirmed
+	existing.InventoryReservationID = reservationID
+
+	stored := cloneOrder(existing)
+	r.orders[orderID] = stored
+	return cloneOrder(existing), nil
+}
+
 func cloneOrder(source order.Order) order.Order {
 	cloned := source
 	cloned.Items = slices.Clone(source.Items)
