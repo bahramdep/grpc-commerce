@@ -25,7 +25,7 @@ type ReserveCommand struct {
 
 type ReleaseCommand struct {
 	IdempotencyKey string
-	ReservationId  string
+	ReservationID  string
 }
 
 type Service struct {
@@ -71,7 +71,7 @@ func (s *Service) Release(
 		return Reservation{}, err
 	}
 
-	return s.repository.Release(ctx, command.IdempotencyKey, command.ReservationId)
+	return s.repository.Release(ctx, command.IdempotencyKey, command.ReservationID)
 }
 
 func validateReserve(command ReserveCommand) error {
@@ -138,7 +138,7 @@ func validateRelease(command ReleaseCommand) error {
 		)
 	}
 
-	if strings.TrimSpace(command.ReservationId) == "" {
+	if strings.TrimSpace(command.ReservationID) == "" {
 		return fmt.Errorf(
 			"%w: reservation ID is required",
 			ErrInvalidReleaseInventory,
