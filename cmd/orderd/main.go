@@ -17,6 +17,7 @@ import (
 	"github.com/bahramdep/grpc-commerce/internal/order/memory"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
+	"google.golang.org/grpc/reflection"
 )
 
 const (
@@ -85,6 +86,7 @@ func run() error {
 	orderv1.RegisterOrderServiceServer(
 		grpcServer,
 		orderServer)
+	reflection.Register(grpcServer)
 
 	serveErrors := make(chan error, 1)
 	go func() {
