@@ -44,15 +44,23 @@ func (s *Service) Reserve(ctx context.Context, command ReserveCommand) (Reservat
 	if err := validateReserve(command); err != nil {
 		return Reservation{}, err
 	}
+	items := make([]Item, len(command.Items))
 
-	condidate := Reservation{
-		OrderID:   command.OrderID,
+	for index, item := range command.Items {
+		items[index] = Item{
+			ProductID: strings.TrimSpace(item.ProductID),
+			Quantity:  item.Quantity,
+		}
+	}
+
+	candidate := Reservation{
+		OrderID:   strings.TrimSpace(command.OrderID),
 		Items:     command.Items,
 		Status:    StatusReserved,
 		CreatedAt: s.now().UTC(),
 	}
 
-	return s.repository.Reserve(ctx, command.IdempotencyKey, condidate)
+	return s.repository.Reserve(ctx, command.IdempotencyKey, candidate)
 }
 
 func (s *Service) Release(
