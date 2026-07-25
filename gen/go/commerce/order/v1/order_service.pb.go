@@ -27,7 +27,7 @@ type OrderStatus int32
 const (
 	OrderStatus_ORDER_STATUS_UNSPECIFIED OrderStatus = 0
 	OrderStatus_ORDER_STATUS_PENDING     OrderStatus = 1
-	OrderStatus_ORDER_STATUS_CONFIRMED   OrderStatus = 3
+	OrderStatus_ORDER_STATUS_CONFIRMED   OrderStatus = 2
 )
 
 // Enum value maps for OrderStatus.
@@ -35,12 +35,12 @@ var (
 	OrderStatus_name = map[int32]string{
 		0: "ORDER_STATUS_UNSPECIFIED",
 		1: "ORDER_STATUS_PENDING",
-		3: "ORDER_STATUS_CONFIRMED",
+		2: "ORDER_STATUS_CONFIRMED",
 	}
 	OrderStatus_value = map[string]int32{
 		"ORDER_STATUS_UNSPECIFIED": 0,
 		"ORDER_STATUS_PENDING":     1,
-		"ORDER_STATUS_CONFIRMED":   3,
+		"ORDER_STATUS_CONFIRMED":   2,
 	}
 )
 
@@ -339,7 +339,7 @@ const file_commerce_order_v1_order_service_proto_rawDesc = "" +
 	"\vOrderStatus\x12\x1c\n" +
 	"\x18ORDER_STATUS_UNSPECIFIED\x10\x00\x12\x18\n" +
 	"\x14ORDER_STATUS_PENDING\x10\x01\x12\x1a\n" +
-	"\x16ORDER_STATUS_CONFIRMED\x10\x032l\n" +
+	"\x16ORDER_STATUS_CONFIRMED\x10\x022l\n" +
 	"\fOrderService\x12\\\n" +
 	"\vCreateOrder\x12%.commerce.order.v1.CreateOrderRequest\x1a&.commerce.order.v1.CreateOrderResponseBEZCgithub.com/bahramdep/grpc-commerce/gen/go/commerce/order/v1;orderv1b\x06proto3"
 

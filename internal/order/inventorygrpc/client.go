@@ -26,7 +26,7 @@ func New(connection grpc.ClientConnInterface) *Client {
 
 func (c *Client) Reserve(
 	ctx context.Context,
-	command order.ReserverInventoryCommand,
+	command order.ReserveInventoryCommand,
 ) (order.InventoryReservation, error) {
 	items := make(
 		[]*inventoryv1.InventoryItem,

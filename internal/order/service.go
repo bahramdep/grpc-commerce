@@ -90,7 +90,7 @@ func (s *Service) Create(ctx context.Context, command CreateCommand) (Order, err
 		}
 	}
 	candidate := Order{
-		CustomerID: command.CustomerID,
+		CustomerID: strings.TrimSpace(command.CustomerID),
 		Items:      items,
 		Status:     StatusPending,
 		CreatedAt:  s.now().UTC(),
@@ -118,7 +118,7 @@ func (s *Service) Create(ctx context.Context, command CreateCommand) (Order, err
 
 	reservation, err := s.inventory.Reserve(
 		reservationContext,
-		ReserverInventoryCommand{
+		ReserveInventoryCommand{
 			IdempotencyKey: fmt.Sprintf(
 				"order:%s:reserve",
 				created.ID,

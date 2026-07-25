@@ -115,7 +115,7 @@ func toStatusError(err error) error {
 			"inventory reservation conflict",
 		)
 	case errors.Is(err, context.DeadlineExceeded):
-		return status.Error(codes.Canceled, "request deadline exceeded")
+		return status.Error(codes.DeadlineExceeded, "request deadline exceeded")
 	default:
 		return status.Error(codes.Internal, "internal server error")
 	}

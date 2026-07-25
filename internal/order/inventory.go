@@ -23,7 +23,7 @@ var (
 	)
 )
 
-type ReserverInventoryCommand struct {
+type ReserveInventoryCommand struct {
 	IdempotencyKey string
 	OrderID        string
 	Items          []Item
@@ -37,6 +37,6 @@ type InventoryReservation struct {
 type Inventory interface {
 	Reserve(
 		ctx context.Context,
-		command ReserverInventoryCommand,
+		command ReserveInventoryCommand,
 	) (InventoryReservation, error)
 }
