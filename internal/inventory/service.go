@@ -55,7 +55,7 @@ func (s *Service) Reserve(ctx context.Context, command ReserveCommand) (Reservat
 
 	candidate := Reservation{
 		OrderID:   strings.TrimSpace(command.OrderID),
-		Items:     command.Items,
+		Items:     items,
 		Status:    StatusReserved,
 		CreatedAt: s.now().UTC(),
 	}
