@@ -3,7 +3,25 @@ SHELL := /bin/sh
 GO ?= go
 BUF ?= buf
 
-.PHONY: help check-tools fmt fmt-check vet test test-race proto-format proto-format-check proto-lint proto-generate proto-check check
+ENV_FILE ?= .env
+
+ifneq ($(wildcard $(ENV_FILE)),)
+include $(ENV_FILE)
+export
+endif
+
+
+.PHONY: help check-tools fmt fmt-check vet test test-race proto-format proto-format-check proto-lint proto-generate proto-check check run-orderd run-inventoryd run-ordercli
+
+run-orderd:
+	@$(GO) run ./cmd/orderd
+
+run-inventoryd:
+	@$(GO) run ./cmd/inventoryd
+
+run-ordercli:
+	@$(GO) run ./cmd/ordercli
+
 
 help: ## Show available commands.
 	@awk 'BEGIN {FS = ":.*## "}; /^[a-zA-Z_-]+:.*## / {printf "%-18s %s\n", $$1, $$2}' $(MAKEFILE_LIST)

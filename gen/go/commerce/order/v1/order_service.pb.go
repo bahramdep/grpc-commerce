@@ -27,6 +27,7 @@ type OrderStatus int32
 const (
 	OrderStatus_ORDER_STATUS_UNSPECIFIED OrderStatus = 0
 	OrderStatus_ORDER_STATUS_PENDING     OrderStatus = 1
+	OrderStatus_ORDER_STATUS_CONFIRMED   OrderStatus = 2
 )
 
 // Enum value maps for OrderStatus.
@@ -34,10 +35,12 @@ var (
 	OrderStatus_name = map[int32]string{
 		0: "ORDER_STATUS_UNSPECIFIED",
 		1: "ORDER_STATUS_PENDING",
+		2: "ORDER_STATUS_CONFIRMED",
 	}
 	OrderStatus_value = map[string]int32{
 		"ORDER_STATUS_UNSPECIFIED": 0,
 		"ORDER_STATUS_PENDING":     1,
+		"ORDER_STATUS_CONFIRMED":   2,
 	}
 )
 
@@ -225,14 +228,15 @@ func (x *OrderItem) GetQuantity() int32 {
 }
 
 type Order struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Id            string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
-	CustomerId    string                 `protobuf:"bytes,2,opt,name=customer_id,json=customerId,proto3" json:"customer_id,omitempty"`
-	Items         []*OrderItem           `protobuf:"bytes,3,rep,name=items,proto3" json:"items,omitempty"`
-	Status        OrderStatus            `protobuf:"varint,4,opt,name=status,proto3,enum=commerce.order.v1.OrderStatus" json:"status,omitempty"`
-	CreatedAt     *timestamppb.Timestamp `protobuf:"bytes,5,opt,name=created_at,json=createdAt,proto3" json:"created_at,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
+	state                  protoimpl.MessageState `protogen:"open.v1"`
+	Id                     string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
+	CustomerId             string                 `protobuf:"bytes,2,opt,name=customer_id,json=customerId,proto3" json:"customer_id,omitempty"`
+	Items                  []*OrderItem           `protobuf:"bytes,3,rep,name=items,proto3" json:"items,omitempty"`
+	Status                 OrderStatus            `protobuf:"varint,4,opt,name=status,proto3,enum=commerce.order.v1.OrderStatus" json:"status,omitempty"`
+	CreatedAt              *timestamppb.Timestamp `protobuf:"bytes,5,opt,name=created_at,json=createdAt,proto3" json:"created_at,omitempty"`
+	InventoryReservationId string                 `protobuf:"bytes,6,opt,name=inventory_reservation_id,json=inventoryReservationId,proto3" json:"inventory_reservation_id,omitempty"`
+	unknownFields          protoimpl.UnknownFields
+	sizeCache              protoimpl.SizeCache
 }
 
 func (x *Order) Reset() {
@@ -300,6 +304,13 @@ func (x *Order) GetCreatedAt() *timestamppb.Timestamp {
 	return nil
 }
 
+func (x *Order) GetInventoryReservationId() string {
+	if x != nil {
+		return x.InventoryReservationId
+	}
+	return ""
+}
+
 var File_commerce_order_v1_order_service_proto protoreflect.FileDescriptor
 
 const file_commerce_order_v1_order_service_proto_rawDesc = "" +
@@ -315,7 +326,7 @@ const file_commerce_order_v1_order_service_proto_rawDesc = "" +
 	"\tOrderItem\x12\x1d\n" +
 	"\n" +
 	"product_id\x18\x01 \x01(\tR\tproductId\x12\x1a\n" +
-	"\bquantity\x18\x02 \x01(\x05R\bquantity\"\xdf\x01\n" +
+	"\bquantity\x18\x02 \x01(\x05R\bquantity\"\x99\x02\n" +
 	"\x05Order\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\tR\x02id\x12\x1f\n" +
 	"\vcustomer_id\x18\x02 \x01(\tR\n" +
@@ -323,10 +334,12 @@ const file_commerce_order_v1_order_service_proto_rawDesc = "" +
 	"\x05items\x18\x03 \x03(\v2\x1c.commerce.order.v1.OrderItemR\x05items\x126\n" +
 	"\x06status\x18\x04 \x01(\x0e2\x1e.commerce.order.v1.OrderStatusR\x06status\x129\n" +
 	"\n" +
-	"created_at\x18\x05 \x01(\v2\x1a.google.protobuf.TimestampR\tcreatedAt*E\n" +
+	"created_at\x18\x05 \x01(\v2\x1a.google.protobuf.TimestampR\tcreatedAt\x128\n" +
+	"\x18inventory_reservation_id\x18\x06 \x01(\tR\x16inventoryReservationId*a\n" +
 	"\vOrderStatus\x12\x1c\n" +
 	"\x18ORDER_STATUS_UNSPECIFIED\x10\x00\x12\x18\n" +
-	"\x14ORDER_STATUS_PENDING\x10\x012l\n" +
+	"\x14ORDER_STATUS_PENDING\x10\x01\x12\x1a\n" +
+	"\x16ORDER_STATUS_CONFIRMED\x10\x022l\n" +
 	"\fOrderService\x12\\\n" +
 	"\vCreateOrder\x12%.commerce.order.v1.CreateOrderRequest\x1a&.commerce.order.v1.CreateOrderResponseBEZCgithub.com/bahramdep/grpc-commerce/gen/go/commerce/order/v1;orderv1b\x06proto3"
 

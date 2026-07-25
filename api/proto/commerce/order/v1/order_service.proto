@@ -31,9 +31,11 @@ message Order {
   repeated OrderItem items = 3;
   OrderStatus status = 4;
   google.protobuf.Timestamp created_at = 5;
+  string inventory_reservation_id = 6;
 }
 
 enum OrderStatus {
   ORDER_STATUS_UNSPECIFIED = 0;
   ORDER_STATUS_PENDING = 1;
+  ORDER_STATUS_CONFIRMED = 2;
 }

@@ -66,11 +66,12 @@ func toProtoOrder(order order.Order) *orderv1.Order {
 		}
 	}
 	return &orderv1.Order{
-		Id:         order.ID,
-		CustomerId: order.CustomerID,
-		Items:      items,
-		Status:     toProtoStatus(order.Status),
-		CreatedAt:  timestamppb.New(order.CreatedAt),
+		Id:                     order.ID,
+		CustomerId:             order.CustomerID,
+		Items:                  items,
+		Status:                 toProtoStatus(order.Status),
+		CreatedAt:              timestamppb.New(order.CreatedAt),
+		InventoryReservationId: order.InventoryReservationID,
 	}
 }
 
@@ -78,6 +79,8 @@ func toProtoStatus(status order.Status) orderv1.OrderStatus {
 	switch status {
 	case order.StatusPending:
 		return orderv1.OrderStatus_ORDER_STATUS_PENDING
+	case order.StatusConfirmed:
+		return orderv1.OrderStatus_ORDER_STATUS_CONFIRMED
 	default:
 		return orderv1.OrderStatus_ORDER_STATUS_UNSPECIFIED
 	}
@@ -89,9 +92,30 @@ func toStatusError(err error) error {
 		return status.Error(codes.InvalidArgument, "invalid create order input")
 	case errors.Is(err, order.ErrIdempotencyKeyConflict):
 		return status.Error(codes.AlreadyExists, "idempotency key conflict")
-	case errors.Is(err, context.Canceled),
-		errors.Is(err, context.DeadlineExceeded):
-		return status.Error(codes.Canceled, "request canceled")
+	case errors.Is(err, context.Canceled):
+		return status.Error(
+			codes.Canceled,
+			"request canceled",
+		)
+	case errors.Is(err, order.ErrInsufficientInventory):
+		return status.Error(
+			codes.FailedPrecondition,
+			"insufficient inventory",
+		)
+
+	case errors.Is(err, order.ErrInventoryUnavailable):
+		return status.Error(
+			codes.Unavailable,
+			"inventory service unavailable",
+		)
+	case errors.Is(err, order.ErrInventoryConflict),
+		errors.Is(err, order.ErrInventoryReservationConflict):
+		return status.Error(
+			codes.Aborted,
+			"inventory reservation conflict",
+		)
+	case errors.Is(err, context.DeadlineExceeded):
+		return status.Error(codes.DeadlineExceeded, "request deadline exceeded")
 	default:
 		return status.Error(codes.Internal, "internal server error")
 	}
